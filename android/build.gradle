@@ -6,7 +6,12 @@ buildscript {
     }
 
     dependencies {
+
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //    add this lines for solve firebase cross-platform issue
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.android.tools.build:gradle:7.3.0'
+
     }
 }
 
