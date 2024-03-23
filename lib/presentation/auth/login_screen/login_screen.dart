@@ -1,6 +1,12 @@
+import 'package:derivers_app/global/global.dart';
 import 'package:derivers_app/presentation/auth/signup_screen/signup_screen.dart';
+import 'package:derivers_app/presentation/navbar/navbar_screen.dart';
+import 'package:derivers_app/presentation/widgets/progress_indicator.dart';
 import 'package:derivers_app/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,58 +31,60 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     else
     {
-      // loginDriverNow();
+      loginDriverNow();
+
     }
   }
 
 
-  // loginDriverNow() async
-  // {
-  //   showDialog(
-  //       context: context,
-  //       barrierDismissible: false,
-  //       builder: (BuildContext c)
-  //       {
-  //         return ProgressDialog(message: "Processing, Please wait...",);
-  //       }
-  //   );
-  //
-  //   final User? firebaseUser = (
-  //       await fAuth.signInWithEmailAndPassword(
-  //         email: emailTextEditingController.text.trim(),
-  //         password: passwordTextEditingController.text.trim(),
-  //       ).catchError((msg){
-  //         Navigator.pop(context);
-  //         Fluttertoast.showToast(msg: "Error: " + msg.toString());
-  //       })
-  //   ).user;
-  //
-  //   if(firebaseUser != null)
-  //   {
-  //     DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");
-  //     driversRef.child(firebaseUser.uid).once().then((driverKey)
-  //     {
-  //       final snap = driverKey.snapshot;
-  //       if(snap.value != null)
-  //       {
-  //         currentFirebaseUser = firebaseUser;
-  //         Fluttertoast.showToast(msg: "Login Successful.");
-  //         Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
-  //       }
-  //       else
-  //       {
-  //         Fluttertoast.showToast(msg: "No record exist with this email.");
-  //         fAuth.signOut();
-  //         Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
-  //       }
-  //     });
-  //   }
-  //   else
-  //   {
-  //     Navigator.pop(context);
-  //     Fluttertoast.showToast(msg: "Error Occurred during Login.");
-  //   }
-  // }
+  loginDriverNow() async
+  {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext c)
+        {
+          return ProgressDialog(message: "Processing, Please wait...",);
+        }
+    );
+
+    final User? firebaseUser = (
+        await fAuth.signInWithEmailAndPassword(
+          email: emailTextEditingController.text.trim(),
+          password: passwordTextEditingController.text.trim(),
+        ).catchError((msg){
+          Navigator.pop(context);
+          Fluttertoast.showToast(msg: "Error: " + msg.toString());
+        })
+    ).user;
+
+    if(firebaseUser != null)
+    {
+      DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");
+      driversRef.child(firebaseUser.uid).once().then((driverKey)
+      {
+        final snap = driverKey.snapshot;
+        if(snap.value != null)
+        {
+          currentFirebaseUser = firebaseUser;
+          Fluttertoast.showToast(msg: "Login Successful.");
+          Navigator.push(context, MaterialPageRoute(builder: (c)=> const NavBarScreen()));
+        }
+        else
+        {
+          Navigator.pop(context);
+          Fluttertoast.showToast(msg: "No record exist with this email.");
+          // fAuth.signOut();
+          // Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
+        }
+      });
+    }
+    else
+    {
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: "Error Occurred during Login.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

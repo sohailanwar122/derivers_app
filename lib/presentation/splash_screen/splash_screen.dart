@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:derivers_app/presentation/auth/signup_screen/signup_screen.dart';
+import 'package:derivers_app/global/global.dart';
+import 'package:derivers_app/presentation/auth/login_screen/login_screen.dart';
 import 'package:derivers_app/presentation/navbar/navbar_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -19,16 +20,15 @@ class _SplashScreenState extends State<SplashScreen>
   {
     Timer(const Duration(seconds: 3), () async
     {
-
-      // if(await fAuth.currentUser != null)
-      // {
-      //   currentFirebaseUser = fAuth.currentUser;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=> const SignUpScreen()));
-      // }
-      // else
-      // {
-      //   Navigator.push(context, MaterialPageRoute(builder: (c)=> LoginScreen()));
-      // }
+      if(await fAuth.currentUser != null)
+      {
+        currentFirebaseUser = fAuth.currentUser;
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> const NavBarScreen()));
+      }
+      else
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> LoginScreen()));
+      }
     });
   }
 

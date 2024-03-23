@@ -1,3 +1,8 @@
+import 'package:derivers_app/global/global.dart';
+import 'package:derivers_app/presentation/navbar/navbar_screen.dart';
+import 'package:derivers_app/presentation/splash_screen/splash_screen.dart';
+import 'package:derivers_app/utils/utils.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class CarInfoScreen extends StatefulWidget {
@@ -7,7 +12,8 @@ class CarInfoScreen extends StatefulWidget {
   State<CarInfoScreen> createState() => _CarInfoScreenState();
 }
 
-class _CarInfoScreenState extends State<CarInfoScreen> {
+class _CarInfoScreenState extends State<CarInfoScreen>
+{
 
   TextEditingController carModelTextEditingController = TextEditingController();
   TextEditingController carNumberTextEditingController = TextEditingController();
@@ -16,22 +22,22 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
   List<String> carTypesList = ["uber-x", "uber-go", "bike"];
   String? selectedCarType;
 
-  // saveCarInfo()
-  // {
-  //   Map driverCarInfoMap =
-  //   {
-  //     "car_color": carColorTextEditingController.text.trim(),
-  //     "car_number": carNumberTextEditingController.text.trim(),
-  //     "car_model": carModelTextEditingController.text.trim(),
-  //     "type": selectedCarType,
-  //   };
-  //
-  //   DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");
-  //   driversRef.child(currentFirebaseUser!.uid).child("car_details").set(driverCarInfoMap);
-  //
-  //   Fluttertoast.showToast(msg: "Car Details has been saved, Congratulations.");
-  //   Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
-  // }
+  /// save car information in firebase as node car_collections inside drivers collection
+  saveCarInfo()
+  {
+    Map driverCarInfoMap =
+    {
+      "car_color": carColorTextEditingController.text.trim(),
+      "car_number": carNumberTextEditingController.text.trim(),
+      "car_model": carModelTextEditingController.text.trim(),
+      "type": selectedCarType,
+    };
+
+    DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");
+    driversRef.child(currentFirebaseUser!.uid).child("car_details").set(driverCarInfoMap);
+    Utils.toastMessage("Car Details has been saved, Congratulations.");
+    Navigator.push(context, MaterialPageRoute(builder: (c)=> const SplashScreen()));
+  }
 
 
   @override
@@ -176,7 +182,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                       && carNumberTextEditingController.text.isNotEmpty
                       && carModelTextEditingController.text.isNotEmpty && selectedCarType != null)
                   {
-                    // saveCarInfo();
+                    saveCarInfo();
                   }
                 },
                 style: ElevatedButton.styleFrom(
